@@ -8,6 +8,7 @@ class Gate {
 		virtual void computeOutput();
 		void setInput(Gate* input1, Gate* input2);
 		bool getOutput();
+		virtual ~Gate();
 
 	protected:
 		int id;
