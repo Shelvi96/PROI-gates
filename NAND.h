@@ -5,7 +5,7 @@
 class NAND : public Gate {
 	public:
 		NAND(int id0);
-		void computeOutput() override;
+		bool computeVal() override;
 
 	protected:
 

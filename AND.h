@@ -5,7 +5,7 @@
 class AND : public Gate {
 	public:
 		AND(int id0);
-		void computeOutput() override;
+		bool computeVal() override;
 
 	protected:
 

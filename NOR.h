@@ -5,7 +5,7 @@
 class NOR : public Gate {
 	public:
 		NOR(int id0);
-		void computeOutput() override;
+		bool computeVal() override;
 
 	protected:
 

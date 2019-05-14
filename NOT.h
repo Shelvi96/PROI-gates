@@ -5,7 +5,9 @@
 class NOT : public Gate {
 	public:
 		NOT(int id0);
-		void computeOutput() override;
+		bool computeVal() override;
+		void setInput(Gate* input1);
+		void disconnect() override;
 
 	protected:
 

@@ -5,7 +5,7 @@
 class XOR : public Gate {
 	public:
 		XOR(int id0);
-		void computeOutput() override;
+		bool computeVal() override;
 
 	protected:
 

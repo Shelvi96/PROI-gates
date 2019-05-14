@@ -5,7 +5,7 @@
 class OR : public Gate {
 	public:
 		OR(int id0);
-		void computeOutput() override;
+		bool computeVal() override;
 
 	protected:
 

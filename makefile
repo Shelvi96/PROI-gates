@@ -1,7 +1,7 @@
 CFLAGS=-std=c++11 -Wall -Wextra -Wshadow -fsanitize=address -D_GLIBCXX_DEBUG
 
-main: main.o Gate.o NOT.o AND.o NAND.o OR.o NOR.o XOR.o True.o False.o
-	g++ -o main Gate.o NOT.o AND.o NAND.o OR.o NOR.o XOR.o True.o False.o main.o $(CFLAGS)
+main: Gate.o NOT.o AND.o NAND.o OR.o NOR.o XOR.o True.o False.o Circuit.o main.o
+	g++ -o main Gate.o NOT.o AND.o NAND.o OR.o NOR.o XOR.o True.o False.o Circuit.o main.o $(CFLAGS)
 
 Gate.o: Gate.cpp Gate.h
 	g++ -c Gate.cpp $(CFLAGS)
@@ -30,6 +30,9 @@ True.o: True.cpp True.h
 False.o: False.cpp False.h
 	g++ -c False.cpp $(CFLAGS)
 
+Circuit.o: Circuit.cpp Circuit.h
+	g++ -c Circuit.cpp $(CFLAGS)
+
 main.o: main.cpp
 	g++ -c main.cpp $(CFLAGS)
 
@@ -44,6 +47,7 @@ clean:
 	rm XOR.o
 	rm True.o
 	rm False.o
+	rm Circuit.o
 	rm main.o
 	rm main
 	@echo "Done."
