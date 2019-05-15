@@ -1,50 +1,64 @@
 #include "Gate.h"
 
-Gate::Gate(int id0, std::string name0) : id(id0), active(false), name(name0), input1(nullptr), input2(nullptr), output(nullptr) {}
+Gate::Gate(int id0, std::string name0) : id(id0), name(name0), input1(nullptr), input2(nullptr), output(nullptr) {}
 
-Gate::~Gate() {}
-
-bool Gate::isUsed() {
-	return output != nullptr;
-}
-
-bool Gate::isActive() {
-	return active;
-}
+Gate::~Gate() { }
 
 bool Gate::computeVal() {
 	return false;
 }
 
-void Gate::setInput(Gate* input01, Gate* input02) {
-	if (this == input01 || this == input02)
-		throw Feedback();
+void Gate::changeInput1(Gate* g) {
+	input1 = g;
+}
+void Gate::changeInput2(Gate* g) {
+	input2 = g;
+}
+void Gate::changeOutput(Gate* g) {
+	output = g;
+}
 
-	if (input01->isUsed() || input02->isUsed())
+void Gate::setInput(Gate* g1, Gate* g2) {
+	if (this == g1 || this == g2)
+		throw Feedback();
+	if (g1->output != nullptr || g2->output != nullptr) {
+		throw AlreadyUsed();
+	}
+	if (input1 != nullptr && input1->name != "True" && input1->name != "False")
+		throw AlreadyUsed();
+	if (input2 != nullptr && input2->name != "True" && input2->name != "False")
 		throw AlreadyUsed();
 
-	input01->setOutput(this);
-	input1 = input01;
-	input02->setOutput(this);
-	input2 = input02;
-
-	active = true;
+	input1 = g1;
+	g1->changeOutput(this);
+	input2 = g2;
+	g2->changeOutput(this);
 }
 
-void Gate::setOutput(Gate* output0) {
-	output = output0;
+void Gate::setOutput(Gate* g) {
+	if (g->name == "True" || g->name == "False")
+		throw OutputAssignmentError();
+	if (g == this)
+		throw Feedback();
+	if (g->input1 != nullptr && g->input2 != nullptr)
+		throw AlreadyUsed();
+
+	output = g;
+	if (g->input1 == nullptr)
+		g->changeInput1(this);
+	else
+		g->changeInput2(this);
 }
 
-void Gate::disconnect() {
+bool Gate::isOutput() {
+	return output != nullptr;	
+}
+
+void Gate::remove() {
 	if (output != nullptr)
 		throw GateInUse();
-
-	input1->setOutput();	
-	input2->setOutput();
-	input1 = nullptr;
-	input2 = nullptr;
-
-	active = false;
+	input1->output = nullptr;
+	input2->output = nullptr;
 }
 
 void Gate::print(int lvl) {

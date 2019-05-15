@@ -1,6 +1,6 @@
 #ifndef Circiut_H
 #define Circuit_H
-#include <vector>
+#include <map>
 #include "Gate.h"
 #include "NOT.h"
 #include "AND.h"
@@ -16,14 +16,15 @@ class Circuit {
 		Circuit();
 		~Circuit();
 		void addGate(std::string name, int input1, int input2 = 0);
-		void disconnectGate(int gateID);
+		void removeGate(int gateID);
 		bool computeOutput(int gateID);
 		void printCircuit();
 
 	protected:
 
 	private:
-		std::vector<Gate*> gates;
+		int id;
+		std::map<int, Gate*> gates;
 };
 
 struct OutOfBound : public std::exception {

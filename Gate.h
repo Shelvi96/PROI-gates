@@ -7,18 +7,23 @@ class Gate {
 	public:
 		Gate(int id0, std::string name0);
 		virtual ~Gate();
-		bool isUsed();
-		bool isActive();
+		
+		virtual void setInput(Gate* g1, Gate* g2 = nullptr);
+		virtual void setOutput(Gate* g = nullptr);
 		virtual bool computeVal();
-		void setInput(Gate* input1, Gate* input2);
-		virtual void setOutput(Gate* output = nullptr);
-		virtual void disconnect();
+
+		void changeInput1(Gate* g);
+		void changeInput2(Gate* g);
+		virtual void changeOutput(Gate* g);
+
+		bool isOutput();
+		void remove();
 		void print(int lvl);
 
 	protected:
 		int id;
-		bool active;
 		std::string name;
+
 		Gate* input1;
 		Gate* input2;
 		Gate* output;
@@ -42,6 +47,12 @@ struct AlreadyUsed: public std::exception {
 struct GateInUse : public std::exception {
    const char * msg () const throw () {
       return "Wyjscie tej bramki jest używana! Odlaczanie nie powiodlo sie.";
+   }
+};
+
+struct OutputAssignmentError : public std::exception {
+   const char * msg () const throw () {
+      return "Na wyjscie bramki nie mozna ustawic prawdy i falszu! Podlaczanie nie powiodlo sie.";
    }
 };
 

@@ -6,8 +6,6 @@ class NOT : public Gate {
 	public:
 		NOT(int id0);
 		bool computeVal() override;
-		void setInput(Gate* input1);
-		void disconnect() override;
 
 	protected:
 
