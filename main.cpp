@@ -132,7 +132,12 @@ int main () {
 			int id, input;
 			bool val;
 			cin >> id >> input >> val;
-			c.setInputValue(id, input, val);
+			try {
+				c.setInputValue(id, input, val);
+			}
+			catch (const myexception& ex) {
+				cout << ex.msg() << endl;
+			}
 		}
 		else if (instruction == "pokaz") {
 			c.printCircuit();
