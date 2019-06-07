@@ -6,7 +6,7 @@ class False : public Gate {
 	public:
 		False();
 		bool computeVal() override;
-		void changeOutput(Gate* g);
+		void changeOutput(Gate* g) override;
 		void setOutput(Gate* output0) override;
 
 	protected:

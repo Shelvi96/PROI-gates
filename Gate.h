@@ -1,23 +1,27 @@
 #ifndef Gate_H
 #define Gate_H
 #include <iostream>
-#include <exception>
+#include "Exceptions.h"
 
 class Gate {
 	public:
 		Gate(int id0, std::string name0);
 		virtual ~Gate();
 		
-		virtual void setInput(Gate* g1, Gate* g2 = nullptr);
+		void setInput(Gate* g1, Gate* g2 = nullptr);
 		virtual void setOutput(Gate* g = nullptr);
 		virtual bool computeVal();
 
 		void changeInput1(Gate* g);
+		Gate* getInput1();
 		void changeInput2(Gate* g);
+		Gate* getInput2();
 		virtual void changeOutput(Gate* g);
 
+		int getID();
+		std::string getName();
 		bool isOutput();
-		void remove();
+		void remove(Gate* gFalse);
 		void print(int lvl);
 
 	protected:
@@ -30,30 +34,6 @@ class Gate {
 
 	private:
 
-};
-
-struct Feedback : public std::exception {
-   const char * msg () const throw () {
-      return "Sprzężenie zwrotne niedozwolone! Podlaczanie nie powiodlo sie.";
-   }
-};
-
-struct AlreadyUsed: public std::exception {
-   const char * msg () const throw () {
-      return "Ta bramka ma już wykorzystane wyjście! Podlaczanie nie powiodlo sie.";
-   }
-};
-
-struct GateInUse : public std::exception {
-   const char * msg () const throw () {
-      return "Wyjscie tej bramki jest używana! Odlaczanie nie powiodlo sie.";
-   }
-};
-
-struct OutputAssignmentError : public std::exception {
-   const char * msg () const throw () {
-      return "Na wyjscie bramki nie mozna ustawic prawdy i falszu! Podlaczanie nie powiodlo sie.";
-   }
 };
 
 #endif

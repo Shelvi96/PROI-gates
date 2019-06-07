@@ -1,0 +1,10 @@
+Symulator obwodow logicznych.
+Aby wczytac dane z pliku napisz 'wczytaj [nazwa-pliku]'
+Aby zapisac dane do pliku napisz 'zapisz [nazwa-pliku]'
+Aby dodac nowa bramke napisz 'dodaj'
+Aby usunac istniejaca bramke napisz 'usun [id-bramki]
+Aby zmienic wartosc logiczna na wejsciu bramki napisz 'zmien [id-bramki] [numer-wejscia(1 lub 2)] [wartosc-logiczna]'
+Aby wyswietlic stworzony obwod napisz 'pokaz'
+Aby obliczyc wartosc na wyjsciu bramki napisz 'oblicz [id-bramki]
+Aby wyswietlic ponownie ten komunikat napisz 'pomoc'
+Aby zakonczyc napisz 'zakoncz'

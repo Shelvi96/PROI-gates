@@ -1,6 +1,7 @@
 #ifndef Circiut_H
 #define Circuit_H
 #include <map>
+#include "Exceptions.h"
 #include "Gate.h"
 #include "NOT.h"
 #include "AND.h"
@@ -15,7 +16,10 @@ class Circuit {
 	public:
 		Circuit();
 		~Circuit();
-		void addGate(std::string name, int input1, int input2 = 0);
+		void addGate(std::string name, int input1 = 0, int input2 = 0);
+		void addGate(int id0, int input, std::string name2);
+		void addGate(int id0, std::string name);
+		void setInputValue(int id, int input, bool val);
 		void removeGate(int gateID);
 		bool computeOutput(int gateID);
 		void printCircuit();
@@ -25,18 +29,7 @@ class Circuit {
 	private:
 		int id;
 		std::map<int, Gate*> gates;
-};
-
-struct OutOfBound : public std::exception {
-   const char * msg () const throw () {
-      return "Bramka o podanym indeksie nie istnieje!";
-   }
-};
-
-struct GateDoesNotExist : public std::exception {
-   const char * msg () const throw () {
-      return "Bramka o podanej nazwie nie istnieje!";
-   }
+		Gate* makeGate(std::string name, int id, int input1 ,int input2);
 };
 
 #endif

@@ -11,42 +11,106 @@ Circuit::~Circuit() {
 	}
 }
 
-void Circuit::addGate(std::string name, int input1, int input2) {
-	if (gates.find(input1) == gates.end() || gates.find(input2) == gates.end())
-		throw OutOfBound();
-
+Gate* Circuit::makeGate(std::string name, int id0, int input1 ,int input2) { // utility function to create new gate based on required name and inputs/output
+	Gate* gate;
 	if (name == "NOT") {
-		NOT* gate = new NOT(gates.size());
+		gate = new NOT(id0);
 		gate->setInput(gates[input1]);
-		gates[id++] = gate;
 	}
 	else if(name == "AND") {
-		AND* gate = new AND(gates.size());
+		gate = new AND(id0);
 		gate->setInput(gates[input1], gates[input2]);
-		gates[id++] = gate;
 	}
 	else if(name == "NAND") {
-		NAND* gate = new NAND(gates.size());
+		gate = new NAND(id0);
 		gate->setInput(gates[input1], gates[input2]);
-		gates[id++] = gate;
 	}
 	else if(name == "OR") {
-		OR* gate = new OR(gates.size());
+		gate = new OR(id0);
 		gate->setInput(gates[input1], gates[input2]);
-		gates[id++] = gate;
 	}
 	else if(name == "NOR") {
-		NOR* gate = new NOR(gates.size());
+		gate = new NOR(id0);
 		gate->setInput(gates[input1], gates[input2]);
-		gates[id++] = gate;
 	}
 	else if(name == "XOR") {
-		XOR* gate = new XOR(gates.size());
+		gate = new XOR(id0);
 		gate->setInput(gates[input1], gates[input2]);
-		gates[id++] = gate;
 	}
 	else
 		throw GateDoesNotExist();
+	return gate;
+}
+
+void Circuit::addGate(std::string name, int input1, int input2) { // creating new gate, not connected to any other gate
+	if (gates.find(input1) == gates.end() || gates.find(input2) == gates.end())
+		throw OutOfBound();
+
+	try {
+		Gate* gate = makeGate(name, (--gates.end())->second->getID() + 1, input1, input2);
+		gates[gate->getID()] = gate;
+	}
+	catch (const myexception& ex) {
+		throw ex;
+	}
+}
+
+void Circuit::addGate(int id0, int input, std::string name) { // connecting to given input of id0 gate
+	if (id0 < 2 || gates.find(id0) == gates.end())
+		throw OutOfBound();
+	if (input == 2 && gates[id0]->getName() == "NOT")
+		throw GateInUse();
+
+	int in1 = gates[id0]->getInput1()->getID();
+	int in2;
+	if (gates[id0]->getName() != "NOT")
+		in2 = gates[id0]->getInput2()->getID();
+	else in2 = 100;
+
+	if ((input == 1 && in1 > 2) || (input == 2 && in2 > 2))
+		throw AlreadyUsed();
+
+	try {
+		Gate* gate = makeGate(name, (--gates.end())->second->getID() + 1, 0, 0);
+
+		gates[gate->getID()] = gate;
+		gate->changeOutput(gates[id0]);
+
+		if (input == 1) {
+			gates[id0]->changeInput1(gate);
+		}
+		if (input == 2) {
+			gates[id0]->changeInput2(gate);
+		}
+	}
+	catch (const myexception& ex) {
+		throw ex;
+	}
+}
+
+void Circuit::addGate(int id0, std::string name) { // connecting to output of id0 gate
+	if (gates.find(id0) == gates.end())
+		throw OutOfBound();
+
+	try {
+		Gate* gate = makeGate(name, (--gates.end())->second->getID() + 1, id0, 0);
+		gates[gate->getID()] = gate;
+	}
+	catch (const myexception& ex) {
+		throw ex;
+	}
+}
+
+void Circuit::setInputValue(int id0, int input, bool val) {
+	if (gates.find(id0) == gates.end())
+		throw OutOfBound();
+
+	if (input == 1 && gates[id0]->getInput1()->getID() < 2) {
+		gates[id0]->changeInput1(gates[(int)val]);
+	}
+	if (input == 2 && gates[id0]->getInput2()->getID() < 2) {
+		gates[id0]->changeInput2(gates[(int)val]);
+	}
 }
 
 void Circuit::removeGate(int gateID) {
@@ -54,23 +118,28 @@ void Circuit::removeGate(int gateID) {
 		throw OutOfBound();
 
 	try {
-		gates[gateID]->remove();
-		delete gates[gateID];
-		gates.erase(gateID);
+		gates[gateID]->remove(gates[0]);
 	}
-	catch (std::exception ex) {
+	catch (const myexception& ex) {
 		throw ex;
 	}
+
+	delete gates[gateID];
+	gates.erase(gateID);
 }
 
 bool Circuit::computeOutput(int gateID) {
-	if (gateID < 0 || gateID >= (int)gates.size())
+	if (gateID < 2 || gates.find(gateID) == gates.end())
 		throw OutOfBound();
 	
 	return gates[gateID]->computeVal();
 }
 
 void Circuit::printCircuit() {
+	if (gates.size() == 2) {
+		std::cout << "Obwod pusty!" << std::endl;
+		return;
+	}
 	std::map<int, Gate*>::iterator it=gates.begin(); it++; it++;
 	for (; it!=gates.end(); ++it) {
 		if (!(*it).second->isOutput())
