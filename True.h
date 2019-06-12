@@ -5,11 +5,13 @@
 class True : public Gate {
 	public:
 		True();
+		bool computeVal() override;
+		void changeOutput(Gate* g) override;
+		void setOutput(Gate* output0) override;
 
 	protected:
-
+		
 	private:
-
 };
 
 #endif

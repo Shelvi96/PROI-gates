@@ -1,10 +1,10 @@
-#ifndef OR_H
-#define OR_H
+#ifndef XOR_H
+#define XOR_H
 #include "Gate.h"
 
-class OR : public Gate {
+class XOR : public Gate {
 	public:
-		OR(int id0);
+		XOR(int id0);
 		bool computeVal() override;
 
 	protected:

@@ -1,10 +1,10 @@
-#ifndef OR_H
-#define OR_H
+#ifndef NAND_H
+#define NAND_H
 #include "Gate.h"
 
-class OR : public Gate {
+class NAND : public Gate {
 	public:
-		OR(int id0);
+		NAND(int id0);
 		bool computeVal() override;
 
 	protected:
