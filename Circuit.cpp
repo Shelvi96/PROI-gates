@@ -53,6 +53,7 @@ void Circuit::addGate(std::string name, int input1, int input2) { // creating ne
 	catch (const myexception& ex) {
 		throw ex;
 	}
+	// wywalic try i sprawdzic czy przeskoczy dalej
 }
 
 void Circuit::addGate(int id0, int input, std::string name) { // connecting to given input of id0 gate
@@ -145,4 +146,57 @@ void Circuit::printCircuit() {
 		if (!(*it).second->isOutput())
 			(*it).second->print(0);
 	}
+}
+
+void Circuit::save(int gateID, std::ofstream* file) {
+	Gate* gate = gates[gateID];
+	*file << gate->getName();
+	if (gate->getInput1() != nullptr) {
+		*file << " ( ";
+		save(gate->getInput1()->getID(), file);
+		*file << " , ";
+		save(gate->getInput2()->getID(), file);
+		*file << " ) ";
+	}
+}
+
+void Circuit::saveToFile(std::ofstream* file) {
+	auto it = gates.begin();
+	std::advance(it,2);
+	Gate* g = (*it).second;
+	save(g->getID(), file);
+}
+
+void Circuit::read(int parentID, std::ifstream* file) {
+	std::string data;
+	*file >> data;
+	if (data == "(") {
+		*file >> data;
+		if (data != "True" && data != "False") {
+			addGate(parentID, 1, data);
+			read(parentID+1, file);
+		}
+		else if (data == "True") {
+			setInputValue(parentID, 1, true);
+		}
+	}
+	*file >> data;
+	if (data == ",") {
+		*file >> data;
+		if (data != "True" && data != "False") {
+			addGate(parentID, 2, data);
+			read(parentID+1, file);
+		}
+		else if (data == "True") {
+			setInputValue(parentID, 2, true);
+		}
+	}
+	*file >> data;
+}
+
+void Circuit::readFromFile(std::ifstream* file) {
+	std::string data;
+	*file >> data;
+	addGate(data);
+	read(2, file);
 }

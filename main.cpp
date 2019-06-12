@@ -61,13 +61,20 @@ int main () {
 		else if (instruction == "wczytaj") {
 			string fileName;
 			cin >> fileName;
+			ifstream* file = new ifstream(fileName);
 			cout << "Wczytuje plik " << fileName << "..." << endl;
+			c.readFromFile(file);
+			file->close();
 			cout << "Wczytano." << endl;
 		}
 		else if (instruction == "zapisz") {
 			string fileName;
 			cin >> fileName;
+			ofstream* file = new ofstream(fileName);
+			// file->open(fileName, ios::out | ios::trunc);
 			cout << "Zapisuje do pliku " << fileName << "..." << endl;
+			c.saveToFile(file);
+			file->close();
 			cout << "Zapisano." << endl;
 		}
 		else if (instruction == "dodaj") {
@@ -84,6 +91,7 @@ int main () {
 					cout << "Dodano bramke." << endl;
 				}
 				catch (const myexception& ex) {
+					cout << "REEE" << endl;
 					cout << ex.msg() << endl;
 				}
 			}

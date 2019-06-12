@@ -1,6 +1,7 @@
 #ifndef Circiut_H
 #define Circuit_H
 #include <map>
+#include <bits/stdc++.h>
 #include "Exceptions.h"
 #include "Gate.h"
 #include "NOT.h"
@@ -23,6 +24,8 @@ class Circuit {
 		void removeGate(int gateID);
 		bool computeOutput(int gateID);
 		void printCircuit();
+		void saveToFile(std::ofstream* file);
+		void readFromFile(std::ifstream* file);
 
 	protected:
 
@@ -30,6 +33,8 @@ class Circuit {
 		int id;
 		std::map<int, Gate*> gates;
 		Gate* makeGate(std::string name, int id, int input1 ,int input2);
+		void save(int gateID, std::ofstream* file);
+		void read(int parentID, std::ifstream* file);
 };
 
 #endif
