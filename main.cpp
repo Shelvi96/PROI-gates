@@ -91,7 +91,6 @@ int main () {
 					cout << "Dodano bramke." << endl;
 				}
 				catch (const myexception& ex) {
-					cout << "REEE" << endl;
 					cout << ex.msg() << endl;
 				}
 			}
@@ -163,6 +162,9 @@ int main () {
 		else {
 			cout << "Niepoprawna instrukcja! Sprobuj jeszcze raz." << endl;
 		}
+
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	}
 
 	return 0;

@@ -46,14 +46,8 @@ void Circuit::addGate(std::string name, int input1, int input2) { // creating ne
 	if (gates.find(input1) == gates.end() || gates.find(input2) == gates.end())
 		throw OutOfBound();
 
-	try {
-		Gate* gate = makeGate(name, (--gates.end())->second->getID() + 1, input1, input2);
-		gates[gate->getID()] = gate;
-	}
-	catch (const myexception& ex) {
-		throw ex;
-	}
-	// wywalic try i sprawdzic czy przeskoczy dalej
+	Gate* gate = makeGate(name, (--gates.end())->second->getID() + 1, input1, input2);
+	gates[gate->getID()] = gate;
 }
 
 void Circuit::addGate(int id0, int input, std::string name) { // connecting to given input of id0 gate
@@ -71,21 +65,16 @@ void Circuit::addGate(int id0, int input, std::string name) { // connecting to g
 	if ((input == 1 && in1 > 2) || (input == 2 && in2 > 2))
 		throw AlreadyUsed();
 
-	try {
-		Gate* gate = makeGate(name, (--gates.end())->second->getID() + 1, 0, 0);
+	Gate* gate = makeGate(name, (--gates.end())->second->getID() + 1, 0, 0);
 
-		gates[gate->getID()] = gate;
-		gate->changeOutput(gates[id0]);
+	gates[gate->getID()] = gate;
+	gate->changeOutput(gates[id0]);
 
-		if (input == 1) {
-			gates[id0]->changeInput1(gate);
-		}
-		if (input == 2) {
-			gates[id0]->changeInput2(gate);
-		}
+	if (input == 1) {
+		gates[id0]->changeInput1(gate);
 	}
-	catch (const myexception& ex) {
-		throw ex;
+	if (input == 2) {
+		gates[id0]->changeInput2(gate);
 	}
 }
 
@@ -93,13 +82,8 @@ void Circuit::addGate(int id0, std::string name) { // connecting to output of id
 	if (gates.find(id0) == gates.end())
 		throw OutOfBound();
 
-	try {
-		Gate* gate = makeGate(name, (--gates.end())->second->getID() + 1, id0, 0);
-		gates[gate->getID()] = gate;
-	}
-	catch (const myexception& ex) {
-		throw ex;
-	}
+	Gate* gate = makeGate(name, (--gates.end())->second->getID() + 1, id0, 0);
+	gates[gate->getID()] = gate;
 }
 
 void Circuit::setInputValue(int id0, int input, bool val) {
@@ -118,12 +102,7 @@ void Circuit::removeGate(int gateID) {
 	if (gateID < 2 || gates.find(gateID) == gates.end())
 		throw OutOfBound();
 
-	try {
-		gates[gateID]->remove(gates[0]);
-	}
-	catch (const myexception& ex) {
-		throw ex;
-	}
+	gates[gateID]->remove(gates[0]);
 
 	delete gates[gateID];
 	gates.erase(gateID);
@@ -155,7 +134,10 @@ void Circuit::save(int gateID, std::ofstream* file) {
 		*file << " ( ";
 		save(gate->getInput1()->getID(), file);
 		*file << " , ";
-		save(gate->getInput2()->getID(), file);
+		if (gate->getInput2() != nullptr)
+			save(gate->getInput2()->getID(), file);
+		else
+			save(0, file);
 		*file << " ) ";
 	}
 }
